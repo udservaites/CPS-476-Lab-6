@@ -8,17 +8,17 @@
 typedef int(*__stdcall MainWndProc)(HWND, int, int, int);
 typedef int(*__stdcall CleanUp)(HWND);
 
-IDR_ACCEL1 ACCELERATORS //declaration not quite right
+IDR_ACCEL1 ACCELERATORS
 {
-	VK_F1, 106, VIRTKEY
-	VK_F1, 106, SHIFT, VIRTKEY
-	VK_F2, 40027, CONTROL, SHIFT, VIRTKEY //Wins game, not sure if code is correct
-	VK_F6, 114, CONTROL, SHIFT, VIRTKEY //F6 = Abort, Retry, Ignore 
-	VK_F3, 103, VIRTKEY
-	VK_F4, 105, VIRTKEY
-	VK_F5, 109, VIRTKEY
-	VK_F10, 115, VIRTKEY
-	VK_F10, 106, VIRTKEY
+	VK_F1, ID_UNKNOWN, VIRTKEY
+	VK_F1, ID_UNKNOWN, SHIFT, VIRTKEY
+	VK_F2, ID_WIN, CONTROL, SHIFT, VIRTKEY //Wins game, not sure if code is correct
+	VK_F6, ID_CHEAT, CONTROL, SHIFT, VIRTKEY //F6 = Abort, Retry, Ignore 
+	VK_F3, ID_SELECTGAME, VIRTKEY
+	VK_F4, ID_STASTICS, VIRTKEY
+	VK_F5, ID_OPTIONS, VIRTKEY
+	VK_F10, ID_UNDO, VIRTKEY
+	VK_F10, ID_UNKOWN, VIRTKEY
 }
 
 HHOOK handle_1_hook;
@@ -58,6 +58,9 @@ void handleFreecell_3() {
 void handleFreecell_4() {
 	//accelerator table
 	HACCEL hAccel = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDR_ACCEL1));
+	if (hAccel == NULL) {
+		MessageBoxA(NULL, "Error loading accelerator table", "Alert", 1);
+	}
 
 
 	//Matt's code of death
