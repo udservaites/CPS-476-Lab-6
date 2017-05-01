@@ -8,6 +8,8 @@
 #define ID_UNKNOWN 106
 #define IDR_ACCEL1 101
 #define ID_FORCEWIN 40027
+#define ID_OPTIONS 109
+#define ID_UNDO 115
 
 
 
