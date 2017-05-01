@@ -8,7 +8,7 @@
 typedef int(*__stdcall MainWndProc)(HWND, int, int, int);
 typedef int(*__stdcall CleanUp)(HWND);
 
-IDR_ACCEL1 ACCELERATORS
+IDR_ACCEL1 ACCELERATORS //declaration not quite right
 {
 	VK_F1, 106, VIRTKEY
 	VK_F1, 106, SHIFT, VIRTKEY
