@@ -1,4 +1,4 @@
-# CPS-476-Lab-6
+#CPS 476 Lab 6
 
 CPS 476 Spring 2017
 Lab 6 Report
@@ -45,6 +45,13 @@ many of the values in the Freecell table into our own. In the table we created, 
 the keyboard short-cuts would do. 
 Loading the accelerator table into the Freecell program was/is the biggest hurdle. We were
 able to discover how to destroy the Freecell accelerator table, but replacing it was not clear. 
+
+Working on this a little bit more, we revisited each idea one by one and eventually found a way to 
+combine ideas from the loop and the accelerator table. We defined the accelerator table within a 
+resource (.rc) file within our program. This table is then loaded by or dll file and replaces
+the table used by the freecell program. All keyboard messages are intercepted by the dll and our
+accelerator table. 
+
 
 
 Problem 5:
