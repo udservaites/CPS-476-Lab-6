@@ -3,9 +3,6 @@
 CPS 476 Spring 2017
 Lab 6 Report
 
-CPS 476 Spring 2017
-Lab 6 Report
-
 ### Problem 1:
 
 Originally, after tracking the calls through IDA Pro, we thought we should use SetWindowsHookEx()
