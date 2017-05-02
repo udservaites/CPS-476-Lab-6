@@ -10,39 +10,13 @@ typedef int(*__stdcall MainWndProc)(HWND, int, int, int);
 typedef int(*__stdcall CleanUp)(HWND);
 typedef int(*__stdcall MOVECARDS)(HWND);
 
-/*IDR_ACCEL1 ACCELERATORS
-{
-	VK_F1, ID_UNKNOWN, VIRTKEY
-	VK_F1, ID_UNKNOWN, SHIFT, VIRTKEY
-	VK_F2, ID_FORCEWIN, CONTROL, SHIFT, VIRTKEY //Wins game, not sure if code is correct
-	VK_F6, ID_CHEAT, CONTROL, SHIFT, VIRTKEY //F6 = Abort, Retry, Ignore
-	VK_F3, ID_SELECTGAME, VIRTKEY
-	VK_F4, ID_STASTICS, VIRTKEY
-	VK_F5, ID_OPTIONS, VIRTKEY
-	VK_F10, ID_UNDO, VIRTKEY
-	VK_F10, ID_UNKOWN, VIRTKEY
-}
-*/
-HHOOK handle_1_hook;
-HINSTANCE* hinstance = (HINSTANCE*)0x1007860;
-LRESULT __stdcall MessageProc(int nCode, WPARAM wParam, LPARAM lParam) {
+HHOOK hkb;
+KBDLLHOOKSTRUCT kbdStruct;
 
-}
+HACCEL newFreeMenu;
+HACCEL origFreeMenu;
 
-HWND FindMyTopMostWindow()
-{
-	DWORD dwProcID = GetCurrentProcessId();
-	HWND hWnd = GetTopWindow(GetDesktopWindow());
-	while (hWnd)
-	{
-		DWORD dwWndProcID = 0;
-		GetWindowThreadProcessId(hWnd, &dwWndProcID);
-		if (dwWndProcID == dwProcID)
-			return hWnd;
-		hWnd = GetNextWindow(hWnd, GW_HWNDNEXT);
-	}
-	return NULL;
-}
+
 
 void handleFreecell_1() {
 	
@@ -80,7 +54,7 @@ void handleFreecell_3() {
 	*(unsigned int *)0x1007130 = 2;
 }
 void handleFreecell_5() {
-	HWND hWnd = FindMyTopMostWindow();
+	HWND hWnd = *(HWND *)0x01008374;
 	//ensures moves continue to occur
 	*(unsigned int *)0x01007864 = 1;
 	//set cards to zero, so you can win
@@ -92,32 +66,66 @@ void handleFreecell_5() {
 	mcFn(hWnd);
 }
 
+//for problem 4
+void MessageHandler(HWND hWnd, LPMSG uMsg, WPARAM wParam, LPARAM lParam) {
 
-	
-
-void handleFreecell_4and5() {
-
-	while (1) {	
-
-		if ((GetKeyState(VK_SHIFT) & GetKeyState(VK_CONTROL) & GetKeyState(VK_F6)) & 0x8000) {
-			//MessageBoxA(0, "HI", "Hello", 1);
-			HWND hwndmain = FindMyTopMostWindow();
-			MainWndProc proc = (MainWndProc)0x1001AF9;
-			proc(hwndmain, 0, 0x72, 0);
-		
-			break;
-		}
-		if ((GetKeyState(VK_SHIFT) & GetKeyState(VK_CONTROL) & GetKeyState(VK_F2)) & 0x8000) {
-			handleFreecell_5();
-
-			break;
-		}
-		Sleep(100);
+	if (!TranslateAccelerator(hWnd, newFreeMenu, uMsg))
+	{
+		TranslateMessage(uMsg);
+		DispatchMessage(uMsg);
 	}
-
 }
 
+LRESULT CALLBACK HookCallback(int nCode, WPARAM wParam, LPARAM lParam)
+{
+	char buf[200];
 
+	LPMSG lMsg = (LPMSG)lParam;
+	HWND hWnd;
+	hWnd = *(HWND *)0x01008374;
+
+	if (TranslateAccelerator(hWnd, newFreeMenu, lMsg) == 0)
+	{
+		TranslateMessage(lMsg);
+		DispatchMessage(lMsg);
+	}
+	else {
+
+		if (lMsg->lParam == 0x3C0001) {
+			handleFreecell_5();
+			return 0;
+		}
+	}
+
+	return CallNextHookEx(hkb, nCode, wParam, lParam);
+}
+
+void handleFreecell_4and5(HMODULE hmod)
+{
+	newFreeMenu = LoadAccelerators(hmod, L"FreeMenu");
+
+	char buf[200];
+
+	
+	HWND hWnd = *(HWND *)0x01008374;
+
+	DWORD dwProcID = GetCurrentProcessId();
+	
+
+	DWORD dwThreadID = GetWindowThreadProcessId(hWnd, &dwProcID);
+	
+
+	HWND pgmHwnd;
+	pgmHwnd = *(HWND *)0x01008374;
+	
+	hkb = SetWindowsHookEx(WH_GETMESSAGE, (HOOKPROC)HookCallback, NULL, dwThreadID);
+
+	MSG msg;
+	BOOL bRet;
+
+	while (bRet = GetMessage(&msg, NULL, 0, 0));
+		
+}
 
 BOOL APIENTRY DllMain(HMODULE hModule,
 	DWORD  ul_reason_for_call,
@@ -131,7 +139,7 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 		handleFreecell_1();
 		handleFreecell_2();
 		handleFreecell_3();
-		handleFreecell_4and5();
+		handleFreecell_4and5(hModule);
 	case DLL_THREAD_ATTACH:
 	case DLL_THREAD_DETACH:
 	case DLL_PROCESS_DETACH:
