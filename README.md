@@ -3,6 +3,9 @@
 CPS 476 Spring 2017
 Lab 6 Report
 
+CPS 476 Spring 2017
+Lab 6 Report
+
 ### Problem 1:
 
 Originally, after tracking the calls through IDA Pro, we thought we should use SetWindowsHookEx()
@@ -46,6 +49,7 @@ the keyboard short-cuts would do.
 Loading the accelerator table into the Freecell program was/is the biggest hurdle. We were
 able to discover how to destroy the Freecell accelerator table, but replacing it was not clear. 
 
+###### Update:
 Working on this a little bit more, we revisited each idea one by one and eventually found a way to 
 combine ideas from the loop and the accelerator table. We defined the accelerator table within a 
 resource (.rc) file within our program. This table is then loaded by or dll file and replaces
@@ -61,3 +65,8 @@ Since we couldn't get the accelerator table working, we went the the action list
 side of doing it this way is that the dll file will keep running after the free cell executable is closed. 
 We used GetKeyState for each of the keys required and logically anded them together to check if the keys were down. 
 If they were we called, MoveCards from Freecell to force a win. 
+
+###### Update: 
+We were able to get the accelerator table to function, so the force win will now occur in conjuction with the 
+values set in the accelerator table. 
+
