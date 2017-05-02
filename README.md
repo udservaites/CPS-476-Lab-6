@@ -1,9 +1,9 @@
-#CPS 476 Lab 6
+# CPS 476 Lab 6
 
 CPS 476 Spring 2017
 Lab 6 Report
 
-Problem 1:
+### Problem 1:
 
 Originally, after tracking the calls through IDA Pro, we thought we should use SetWindowsHookEx()
 to intercept the message box and change the string that it had. After several unsuccessful attempts
@@ -12,7 +12,7 @@ VirtualProtect() to overwrite the string at its source. After tracking the strin
 PE Studio, hex editor, and Resource Hacker, we calculated the raw offset. 
 Once we were able to locate the original message, we could rewrite it with one of our own. 
 
-Problem 2:
+### Problem 2:
 
 Looked at IDA PRo and set breakpoints and discovered what values were being changed with the 
 SetInt() function. WIthin the SetInt() function was a call to RegSetValueExW() Windows
@@ -20,7 +20,7 @@ API function. In the SetInt function where it calls to RegCreateKeyW and RegClos
 the number of wins, we needed the registry key number and the path to the registry key, which were pushed before calls to 
 RegCreateKey(). _pszWon value was the registry key value that stored the number of wins. 
 
-Problem 3:
+### Problem 3:
 
 First we discovered an area in the IDA Pro disassembly that clearly represented a switch statement. 
 After a little investigating, we discovered that this switch statement handled all the keyboard 
@@ -30,7 +30,7 @@ prompt to choose "Abort, Retry, Cancel". We followed the path taken by the Abort
 a function called cheating. Following the path of this function led us to discover that setting 
 Cheating to 2 forces a win. In the code, we set this value to 2.  
 
-Problem 4:
+### Problem 4:
 
 We explored a couple different solutions to this problem. One solution was to implement a kind of 
 listener using a loop that would monitor for a certain keyboard combinations. To set the
@@ -54,7 +54,7 @@ accelerator table.
 
 
 
-Problem 5:
+### Problem 5:
 
 Because of our difficulties with Problem 4, we were unable to solve problem 5 with the accelerator table. 
 Since we couldn't get the accelerator table working, we went the the action listener idea. The down 
